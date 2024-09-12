@@ -38,8 +38,9 @@ class ManagerServiceTest {
     @InjectMocks
     private ManagerService managerService;
 
+    //2-6. 유닛 테스트 - 1
     @Test
-    public void manager_목록_조회_시_Todo가_없다면_NPE_에러를_던진다() {
+    public void manager_목록_조회_시_Todo가_없다면_InvalidRequestException를_던진다() {
         // given
         long todoId = 1L;
         given(todoRepository.findById(todoId)).willReturn(Optional.empty());
