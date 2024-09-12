@@ -23,11 +23,10 @@ public class UserService {
         return new UserResponse(user.getId(), user.getEmail());
     }
 
+    //리팩토링 퀴즈 - 메서드 분리
     @Transactional
     public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
-        if (userChangePasswordRequest.getNewPassword().length() < 8 ||
-                !userChangePasswordRequest.getNewPassword().matches(".*\\d.*") ||
-                !userChangePasswordRequest.getNewPassword().matches(".*[A-Z].*")) {
+        if (!isValidNewPassword(userChangePasswordRequest.getNewPassword())) {
             throw new InvalidRequestException("새 비밀번호는 8자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다.");
         }
 
@@ -43,5 +42,11 @@ public class UserService {
         }
 
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
+    }
+
+    private boolean isValidNewPassword(String newPassword) {
+        return newPassword.length() >= 8 &&
+                newPassword.matches(".*\\d.*") &&
+                newPassword.matches(".*[A-Z].*");
     }
 }
